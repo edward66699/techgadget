@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Tất cả bài viết công nghệ - TechGadget CMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+    <div>
+        <h1 style="font-size: 26px; font-weight: 800; color: var(--dark); margin-bottom: 4px;">Kho bài viết & Phân tích</h1>
+        <p style="color: var(--gray-500); font-size: 14px;">Trang {{ posts.page }} trên tổng số {{ posts.pages }} trang chuyên mục</p>
+    </div>
+    <a href="{{ url_for('post_new') }}" class="btn btn-primary">+ Soạn bài viết mới</a>
+</div>
+
+{% if posts.items %}
+    <div class="blog-grid">
+        {% for post in posts.items %}
+            <div class="blog-card">
+                <div class="blog-card-media">
+                    {% if post.image_url %}
+                        <img src="{{ post.image_url }}" alt="{{ post.title }}" class="blog-card-img">
+                    {% endif %}
+                </div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <img src="{{ post.author.gravatar_url(24) }}" width="24" height="24" class="avatar" alt="Avatar">
+                        <a href="{{ url_for('profile', username=post.author.username) }}" style="color: var(--gray-700); text-decoration: none; font-weight: 600;">
+                            {{ post.author.username }}
+                        </a>
+                        <span>•</span>
+                        <span>{{ post.created_at.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                    <h3 class="blog-card-title">
+                        <a href="{{ url_for('post_detail', post_id=post.id) }}">{{ post.title }}</a>
+                    </h3>
+                    <div class="blog-card-footer">
+                        <span class="role-pill">{{ post.author.role.name }}</span>
+                        <a href="{{ url_for('post_detail', post_id=post.id) }}" style="color: var(--primary); font-weight: 600; text-decoration: none;">
+                            {{ post.comments|length }} bình luận &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if posts.has_prev %}
+            <a href="{{ url_for('post_list', page=posts.prev_num) }}">&laquo; Trang trước</a>
+        {% endif %}
+        {% for p in posts.iter_pages() %}
+            {% if p %}
+                {% if p == posts.page %}
+                    <span class="current">{{ p }}</span>
+                {% else %}
+                    <a href="{{ url_for('post_list', page=p) }}">{{ p }}</a>
+                {% endif %}
+            {% else %}
+                <span style="padding: 8px 12px; color: var(--gray-500);">...</span>
+            {% endif %}
+        {% endfor %}
+        {% if posts.has_next %}
+            <a href="{{ url_for('post_list', page=posts.next_num) }}">Trang sau &raquo;</a>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="card" style="text-align: center; padding: 40px;">
+        <p style="color: var(--gray-500);">Chưa có bài viết nào trong hệ thống.</p>
+    </div>
+{% endif %}
+{% endblock %}

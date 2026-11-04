@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - TechGadget CMS{% endblock %}
+
+{% block content %}
+<div style="max-width: 820px; margin: 0 auto;">
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('post_list') }}" style="color: var(--gray-500); text-decoration: none; font-size: 14px; font-weight: 600;">
+            &larr; Quay lại danh sách bài viết
+        </a>
+    </div>
+
+    <article class="card" style="padding: 35px 30px; margin-bottom: 30px;">
+        <h1 style="font-size: 32px; font-weight: 800; line-height: 1.3; color: var(--dark); margin-bottom: 20px;">
+            {{ post.title }}
+        </h1>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gray-200); padding-bottom: 20px; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="{{ post.author.gravatar_url(44) }}" width="44" height="44" class="avatar" alt="Avatar">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <a href="{{ url_for('profile', username=post.author.username) }}" style="color: var(--dark); text-decoration: none; font-weight: 700; font-size: 15px;">
+                            {{ post.author.username }}
+                        </a>
+                        <span class="role-pill">{{ post.author.role.name }}</span>
+                    </div>
+                    <div style="font-size: 13px; color: var(--gray-500); margin-top: 2px;">
+                        Đăng vào ngày {{ post.created_at.strftime('%d/%m/%Y lúc %H:%M') }}
+                    </div>
+                </div>
+            </div>
+
+            {% if current_user.is_authenticated and current_user.id != post.author.id %}
+                <form method="POST" action="{{ url_for('toggle_follow', username=post.author.username) }}">
+                    {% if current_user.is_following(post.author) %}
+                        <button type="submit" class="btn btn-danger" style="padding: 6px 14px; font-size: 13px;">Hủy theo dõi</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-outline" style="padding: 6px 14px; font-size: 13px;">+ Theo dõi tác giả</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+
+        {% if post.image_url %}
+            <div style="margin-bottom: 30px; border-radius: var(--radius-md); overflow: hidden; max-height: 440px;">
+                <img src="{{ post.image_url }}" alt="{{ post.title }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </div>
+        {% endif %}
+
+        <div class="markdown-body">
+            {{ post.body_html | safe }}
+        </div>
+    </article>
+
+    <section class="card" style="padding: 30px;">
+        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 18px; color: var(--dark);">
+            Bình luận & Thảo luận ({{ post.comments|length }})
+        </h3>
+
+        {% if current_user.is_authenticated %}
+            <form method="POST" action="{{ url_for('post_detail', post_id=post.id) }}" style="margin-bottom: 30px;">
+                <textarea id="body_md" name="body_md" rows="4" required placeholder="Viết bình luận của bạn (Hỗ trợ định dạng Markdown, hệ thống tự động lọc mã độc XSS)..."></textarea>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                </div>
+            </form>
+        {% else %}
+            <div style="background-color: var(--gray-100); border-radius: var(--radius-sm); padding: 16px; text-align: center; color: var(--gray-700); margin-bottom: 25px; font-size: 14px;">
+                Vui lòng <a href="{{ url_for('login') }}" style="color: var(--primary); font-weight: 700;">đăng nhập</a> để tham gia viết bình luận.
+            </div>
+        {% endif %}
+
+        {% if post.comments %}
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                {% for c in post.comments %}
+                    <div style="background: var(--gray-100); border-radius: var(--radius-md); padding: 16px 20px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img src="{{ c.author.gravatar_url(28) }}" width="28" height="28" class="avatar" alt="Avatar">
+                                <a href="{{ url_for('profile', username=c.author.username) }}" style="color: var(--dark); text-decoration: none; font-weight: 700; font-size: 14px;">
+                                    {{ c.author.username }}
+                                </a>
+                                <span class="role-pill" style="font-size: 10px; padding: 1px 6px;">{{ c.author.role.name }}</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--gray-500);">
+                                {{ c.created_at.strftime('%d/%m/%Y %H:%M') }}
+                            </div>
+                        </div>
+                        <div class="markdown-body" style="font-size: 14px; color: #334155;">
+                            {{ c.body_html | safe }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: var(--gray-500); text-align: center; font-style: italic; margin-top: 10px;">
+                Chưa có bình luận nào. Hãy là người đầu tiên để lại ý kiến của bạn!
+            </p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

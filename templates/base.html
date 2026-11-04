@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TechGadget - Tạp chí & Đánh giá Công nghệ{% endblock %}</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --dark: #0f172a;
+            --gray-700: #334155;
+            --gray-500: #64748b;
+            --gray-300: #cbd5e1;
+            --gray-200: #e2e8f0;
+            --gray-100: #f1f5f9;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 14px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+        .nav-container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .brand-badge {
+            background: var(--primary);
+            color: var(--white);
+            padding: 2px 7px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--gray-700);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+        .nav-menu a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        .avatar {
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gray-200);
+        }
+        .role-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            gap: 6px;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .btn-outline {
+            background-color: transparent;
+            border-color: var(--gray-300);
+            color: var(--gray-700);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        .btn-white {
+            background-color: var(--white);
+            color: var(--gray-700);
+            border-color: var(--gray-300);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-white:hover {
+            background-color: var(--gray-100);
+        }
+        .btn-white.active {
+            background-color: var(--dark);
+            color: var(--white);
+            border-color: var(--dark);
+        }
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        .main-container {
+            max-width: 1140px;
+            margin: 30px auto 60px auto;
+            padding: 0 20px;
+        }
+        .alert {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            margin-bottom: 24px;
+            border: 1px solid #bfdbfe;
+            background-color: #eff6ff;
+            color: #1e40af;
+            box-shadow: var(--shadow-sm);
+        }
+        .card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .blog-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        .blog-card-media {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: var(--gray-100);
+        }
+        .blog-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .blog-card:hover .blog-card-img {
+            transform: scale(1.04);
+        }
+        .blog-card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .blog-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        .blog-card-title a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .blog-card-title a:hover {
+            color: var(--primary);
+        }
+        .blog-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 12px;
+        }
+        .blog-card-excerpt {
+            font-size: 14px;
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+        .blog-card-footer {
+            border-top: 1px solid var(--gray-100);
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #1e293b;
+        }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+            color: var(--dark);
+            margin-top: 28px;
+            margin-bottom: 14px;
+            line-height: 1.3;
+        }
+        .markdown-body h2 {
+            font-size: 24px;
+            border-bottom: 2px solid var(--gray-100);
+            padding-bottom: 8px;
+        }
+        .markdown-body h3 {
+            font-size: 19px;
+        }
+        .markdown-body p {
+            margin-bottom: 16px;
+        }
+        .markdown-body ul, .markdown-body ol {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+        .markdown-body li {
+            margin-bottom: 6px;
+        }
+        .markdown-body blockquote {
+            border-left: 4px solid var(--primary);
+            background: var(--gray-100);
+            padding: 14px 20px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin: 20px 0;
+            color: var(--gray-700);
+            font-style: italic;
+        }
+        .markdown-body pre {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        .markdown-body code {
+            background: var(--gray-100);
+            color: #b91c1c;
+            padding: 3px 6px;
+            border-radius: var(--radius-sm);
+            font-size: 88%;
+        }
+        .markdown-body pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        .markdown-body img {
+            max-width: 100%;
+            border-radius: var(--radius-md);
+            margin: 15px 0;
+            box-shadow: var(--shadow-sm);
+        }
+        table.modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-top: 15px;
+        }
+        table.modern-table th, table.modern-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 14px;
+        }
+        table.modern-table th {
+            background: #f8fafc;
+            color: var(--gray-700);
+            font-weight: 700;
+            border-bottom: 2px solid var(--gray-200);
+        }
+        table.modern-table tr:last-child td {
+            border-bottom: none;
+        }
+        table.modern-table tr:hover td {
+            background-color: #fcfcfd;
+        }
+        input[type="text"], input[type="password"], input[type="number"], textarea, select {
+            width: 100%;
+            padding: 11px 14px;
+            font-size: 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            margin-top: 6px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            font-family: inherit;
+            background-color: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 36px 0 15px 0;
+            flex-wrap: wrap;
+        }
+        .pagination a, .pagination .current {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .pagination a {
+            background: var(--white);
+            border: 1px solid var(--gray-300);
+            color: var(--gray-700);
+        }
+        .pagination a:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+        .pagination .current {
+            background: var(--primary);
+            color: var(--white);
+            border: 1px solid var(--primary);
+        }
+        footer {
+            border-top: 1px solid var(--gray-200);
+            background: var(--white);
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--gray-500);
+            font-size: 13px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand">
+                <span>TECHGADGET</span>
+                <span class="brand-badge">Magazine</span>
+            </a>
+            <div class="nav-menu">
+                <a href="{{ url_for('home') }}">Trang chủ</a>
+                <a href="{{ url_for('post_list') }}">Khám phá bài viết</a>
+                <a href="{{ url_for('device_list') }}">Thiết bị công nghệ</a>
+                <a href="{{ url_for('post_new') }}" style="color: var(--primary);">+ Đăng bài</a>
+            </div>
+            <div class="nav-user">
+                {% if current_user.is_authenticated %}
+                    <img src="{{ current_user.gravatar_url(32) }}" width="32" height="32" class="avatar" alt="Avatar">
+                    <a href="{{ url_for('profile', username=current_user.username) }}" style="text-decoration: none; color: var(--dark); font-weight: 700;">
+                        {{ current_user.username }}
+                    </a>
+                    <span class="role-pill">{{ current_user.role.name }}</span>
+                    <a href="{{ url_for('logout') }}" style="color: var(--danger); text-decoration: none; font-weight: 600; margin-left: 4px;">Đăng xuất</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary" style="padding: 6px 14px;">Đăng nhập</a>
+                    <span style="color: var(--gray-300);">|</span>
+                    <span style="color: var(--gray-500);">Thử:</span>
+                    <a href="{{ url_for('quick_login', username='tam_admin') }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">tam_admin</a>
+                    <a href="{{ url_for('quick_login', username='an_reviewer') }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">an_reviewer</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="alert">{{ m }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div style="font-weight: 700; color: var(--dark); margin-bottom: 6px;">TECHGADGET CMS</div>
+        <div>Nền tảng Tạp chí Công nghệ, Đánh giá Thiết bị & Diễn đàn Chia sẻ Kinh nghiệm</div>
+    </footer>
+</body>
+</html>

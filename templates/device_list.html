@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Danh mục thiết bị công nghệ - TechGadget CMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+    <div>
+        <h1 style="font-size: 26px; font-weight: 800; color: var(--dark); margin-bottom: 4px;">Danh mục thiết bị phần cứng</h1>
+        <p style="color: var(--gray-500); font-size: 14px;">Kho dữ liệu sản phẩm công nghệ được cộng đồng đánh giá và thảo luận</p>
+    </div>
+    <a href="{{ url_for('device_new') }}" class="btn btn-primary">+ Thêm thiết bị mới</a>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table class="modern-table">
+        <thead>
+            <tr>
+                <th style="width: 80px; text-align: center;">Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Hãng sản xuất</th>
+                <th>Danh mục</th>
+                <th>Giá tham khảo</th>
+                <th>Lượt đánh giá</th>
+                <th style="width: 170px; text-align: right;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if devices %}
+                {% for d in devices %}
+                    <tr>
+                        <td style="text-align: center;">
+                            {% if d.image_url %}
+                                <img src="{{ d.image_url }}" alt="{{ d.name }}" style="width: 54px; height: 54px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--gray-200);">
+                            {% else %}
+                                <div style="width: 54px; height: 54px; background: var(--gray-100); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-500);">Trống</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong style="font-size: 15px;">
+                                <a href="{{ url_for('device_detail', device_id=d.id) }}" style="color: var(--dark); text-decoration: none;">{{ d.name }}</a>
+                            </strong>
+                        </td>
+                        <td><span class="role-pill" style="background: #e0e7ff; color: #3730a3; border-color: #c7d2fe;">{{ d.brand.name }}</span></td>
+                        <td>{{ d.category.name }}</td>
+                        <td style="color: var(--success); font-weight: 700; font-size: 15px;">{{ "{:,}".format(d.price) }} đ</td>
+                        <td>
+                            <span class="role-pill" style="background: var(--primary-light); color: var(--primary); border-color: #bfdbfe;">
+                                {{ d.reviews|length }} đánh giá
+                            </span>
+                        </td>
+                        <td style="text-align: right;">
+                            <a href="{{ url_for('device_detail', device_id=d.id) }}" class="btn btn-white" style="padding: 5px 10px; font-size: 12px;">Chi tiết</a>
+                            <a href="{{ url_for('device_reviews', device_id=d.id) }}" class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Review</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; color: var(--gray-500); padding: 40px;">Chưa có thiết bị nào trong hệ thống.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

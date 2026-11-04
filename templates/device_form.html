@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Thêm thiết bị mới - TechGadget CMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 650px; margin: 0 auto;">
+    <h2 style="margin-top: 0;">Thêm thiết bị công nghệ mới</h2>
+    <form method="POST" action="{{ url_for('device_new') }}">
+        <label for="name"><strong>Tên thiết bị:</strong></label>
+        <input type="text" id="name" name="name" required placeholder="Ví dụ: iPad Pro M4 11 inch">
+
+        <label for="image_url"><strong>Đường dẫn hình ảnh thiết bị (Image URL):</strong></label>
+        <input type="text" id="image_url" name="image_url" placeholder="https://example.com/hinh-anh-thiet-bi.jpg">
+
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <label for="brand_id"><strong>Hãng sản xuất:</strong></label>
+                <select id="brand_id" name="brand_id" required>
+                    <option value="">-- Chọn hãng --</option>
+                    {% for b in brands %}
+                        <option value="{{ b.id }}">{{ b.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label for="category_id"><strong>Danh mục sản phẩm:</strong></label>
+                <select id="category_id" name="category_id" required>
+                    <option value="">-- Chọn danh mục --</option>
+                    {% for c in categories %}
+                        <option value="{{ c.id }}">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <label for="price"><strong>Giá dự kiến (VNĐ):</strong></label>
+        <input type="number" id="price" name="price" value="0" min="0" step="10000">
+
+        <label for="specs"><strong>Thông số kỹ thuật tóm tắt:</strong></label>
+        <textarea id="specs" name="specs" rows="4" placeholder="Nhập cấu hình phần cứng, chip xử lý, RAM, dung lượng pin..."></textarea>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button type="submit" class="btn btn-primary">Lưu thiết bị</button>
+            <a href="{{ url_for('device_list') }}" class="btn btn-default">Hủy bỏ</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

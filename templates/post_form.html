@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Soạn thảo bài viết mới - TechGadget CMS{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="card" style="padding: 35px 30px;">
+        <h1 style="font-size: 24px; font-weight: 800; color: var(--dark); margin-bottom: 8px;">Soạn thảo bài viết công nghệ mới</h1>
+        <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 24px;">Chia sẻ kinh nghiệm, phân tích phần cứng hoặc bài học thủ thuật công nghệ</p>
+
+        <form method="POST" action="{{ url_for('post_new') }}">
+            <label for="title" style="font-weight: 700; font-size: 14px; color: var(--dark);">Tiêu đề bài viết:</label>
+            <input type="text" id="title" name="title" value="{{ title or '' }}" required placeholder="Ví dụ: Đánh giá chi tiết hiệu năng MacBook Pro sau 6 tháng...">
+
+            <label for="image_url" style="font-weight: 700; font-size: 14px; color: var(--dark);">Hình ảnh bìa minh họa (URL ảnh):</label>
+            <input type="text" id="image_url" name="image_url" value="{{ image_url or '' }}" placeholder="https://images.unsplash.com/photo-...">
+
+            <label for="body_md" style="font-weight: 700; font-size: 14px; color: var(--dark);">Nội dung bài viết (Hỗ trợ Markdown):</label>
+            <textarea id="body_md" name="body_md" rows="14" required placeholder="Nhập nội dung bài viết bằng Markdown (## Tiêu đề con, **in đậm**, - danh sách, `code`, ![ảnh](url))...">{{ body_md or '' }}</textarea>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
+                <a href="{{ url_for('post_list') }}" class="btn btn-outline">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary">Xuất bản bài viết</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

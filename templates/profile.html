@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Hồ sơ chuyên gia: {{ user.username }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <div class="card" style="padding: 35px 30px; margin-bottom: 35px; border-radius: var(--radius-lg);">
+        <div style="display: flex; gap: 30px; align-items: center; flex-wrap: wrap;">
+            <img src="{{ user.gravatar_url(110) }}" width="110" height="110" class="avatar" alt="Avatar" style="border: 4px solid var(--primary-light); box-shadow: var(--shadow-md);">
+            <div style="flex: 1; min-width: 250px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                    <h1 style="font-size: 26px; font-weight: 800; color: var(--dark); margin: 0;">{{ user.username }}</h1>
+                    <span class="role-pill" style="background: var(--primary-light); color: var(--primary); border-color: #bfdbfe; font-size: 12px; padding: 3px 10px;">
+                        {{ user.role.name }}
+                    </span>
+                </div>
+                <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 16px;">
+                    {{ user.email }} • Tham gia từ {{ user.created_at.strftime('%m/%Y') }}
+                </p>
+                <div style="display: flex; gap: 24px; font-size: 14px; margin-bottom: 18px;">
+                    <div><strong style="color: var(--dark); font-size: 16px;">{{ followers_count }}</strong> <span style="color: var(--gray-500);">người theo dõi</span></div>
+                    <div><strong style="color: var(--dark); font-size: 16px;">{{ following_count }}</strong> <span style="color: var(--gray-500);">đang theo dõi</span></div>
+                    <div><strong style="color: var(--dark); font-size: 16px;">{{ posts|length }}</strong> <span style="color: var(--gray-500);">bài viết</span></div>
+                </div>
+                {% if current_user.is_authenticated and current_user.id != user.id %}
+                    <form method="POST" action="{{ url_for('toggle_follow', username=user.username) }}">
+                        {% if is_following %}
+                            <button type="submit" class="btn btn-danger">Hủy theo dõi</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">+ Theo dõi chuyên gia</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h2 style="font-size: 22px; font-weight: 800; color: var(--dark); margin-bottom: 20px;">
+        Các bài viết của {{ user.username }}
+    </h2>
+
+    {% if posts %}
+        <div class="blog-grid" style="margin-top: 0;">
+            {% for post in posts %}
+                <div class="blog-card">
+                    <div class="blog-card-media">
+                        {% if post.image_url %}
+                            <img src="{{ post.image_url }}" alt="{{ post.title }}" class="blog-card-img">
+                        {% endif %}
+                    </div>
+                    <div class="blog-card-content">
+                        <div class="blog-card-meta">
+                            <span>Đăng ngày {{ post.created_at.strftime('%d/%m/%Y') }}</span>
+                        </div>
+                        <h3 class="blog-card-title">
+                            <a href="{{ url_for('post_detail', post_id=post.id) }}">{{ post.title }}</a>
+                        </h3>
+                        <div class="blog-card-footer">
+                            <span style="font-size: 13px; color: var(--gray-500);">{{ post.comments|length }} bình luận</span>
+                            <a href="{{ url_for('post_detail', post_id=post.id) }}" style="color: var(--primary); font-weight: 600; text-decoration: none; font-size: 13px;">
+                                Đọc bài &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card" style="text-align: center; color: var(--gray-500); padding: 40px;">
+            Người dùng này chưa có bài viết nào trên tạp chí.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

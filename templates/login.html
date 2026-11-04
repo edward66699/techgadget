@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng nhập - TechGadget CMS{% endblock %}
+
+{% block content %}
+<div style="max-width: 440px; margin: 40px auto;">
+    <div class="card" style="padding: 40px 32px; box-shadow: var(--shadow-md);">
+        <div style="text-align: center; margin-bottom: 28px;">
+            <h1 style="font-size: 24px; font-weight: 800; color: var(--dark); margin-bottom: 6px;">Chào mừng trở lại</h1>
+            <p style="color: var(--gray-500); font-size: 14px;">Đăng nhập để bình luận, đăng bài và theo dõi tác giả</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <label for="username" style="font-weight: 700; font-size: 13px; color: var(--gray-700);">TÊN ĐĂNG NHẬP:</label>
+            <input type="text" id="username" name="username" required placeholder="Nhập username...">
+
+            <label for="password" style="font-weight: 700; font-size: 13px; color: var(--gray-700);">MẬT KHẨU:</label>
+            <input type="password" id="password" name="password" required placeholder="Nhập password...">
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 6px; font-size: 15px;">
+                Đăng nhập hệ thống
+            </button>
+        </form>
+
+        <div style="margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--gray-200);">
+            <div style="font-size: 13px; font-weight: 700; color: var(--gray-700); margin-bottom: 12px; text-align: center;">
+                Tài khoản demo sẵn sàng để thử nghiệm:
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <a href="{{ url_for('quick_login', username='tam_admin') }}" class="btn btn-white" style="justify-content: space-between; padding: 10px 14px; font-size: 13px;">
+                    <span><strong>tam_admin</strong></span>
+                    <span class="role-pill" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">Admin</span>
+                </a>
+                <a href="{{ url_for('quick_login', username='an_reviewer') }}" class="btn btn-white" style="justify-content: space-between; padding: 10px 14px; font-size: 13px;">
+                    <span><strong>an_reviewer</strong></span>
+                    <span class="role-pill" style="background: #e0e7ff; color: #3730a3; border-color: #c7d2fe;">Reviewer</span>
+                </a>
+                <a href="{{ url_for('quick_login', username='binh_tech') }}" class="btn btn-white" style="justify-content: space-between; padding: 10px 14px; font-size: 13px;">
+                    <span><strong>binh_tech</strong></span>
+                    <span class="role-pill">Member</span>
+                </a>
+            </div>
+            <div style="font-size: 12px; color: var(--gray-500); text-align: center; margin-top: 15px;">
+                Mật khẩu mặc định: <code>pass123</code>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

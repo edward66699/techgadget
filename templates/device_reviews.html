@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Đánh giá: {{ device.name }} - TechGadget CMS{% endblock %}
+
+{% block content %}
+<div style="max-width: 840px; margin: 0 auto;">
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('device_detail', device_id=device.id) }}" style="color: var(--gray-500); text-decoration: none; font-size: 14px; font-weight: 600;">
+            &larr; Quay lại thông tin chi tiết thiết bị
+        </a>
+    </div>
+
+    <div class="card" style="padding: 24px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 28px;">
+        {% if device.image_url %}
+            <img src="{{ device.image_url }}" alt="{{ device.name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--gray-200);">
+        {% endif %}
+        <div>
+            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 4px;">{{ device.name }}</h2>
+            <div style="font-size: 14px; color: var(--gray-500);">
+                Hãng: <strong>{{ device.brand.name }}</strong> | 
+                Phân loại: <strong>{{ device.category.name }}</strong> | 
+                Giá niêm yết: <strong style="color: var(--success);">{{ "{:,}".format(device.price) }} VNĐ</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="padding: 28px; margin-bottom: 28px;">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 15px; color: var(--dark);">Gửi nhận xét của bạn về thiết bị này</h3>
+        {% if current_user.is_authenticated %}
+            <form method="POST" action="{{ url_for('device_reviews', device_id=device.id) }}">
+                <textarea id="body_md" name="body_md" rows="4" required placeholder="Nêu cảm nhận thực tế sau khi sử dụng thiết bị (Hỗ trợ định dạng Markdown, lọc mã độc XSS tự động)..."></textarea>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                </div>
+            </form>
+        {% else %}
+            <div style="background-color: var(--gray-100); border-radius: var(--radius-sm); padding: 14px; text-align: center; color: var(--gray-700); font-size: 14px;">
+                Vui lòng <a href="{{ url_for('login') }}" style="color: var(--primary); font-weight: 700;">đăng nhập</a> để tham gia gửi đánh giá sản phẩm.
+            </div>
+        {% endif %}
+    </div>
+
+    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 18px; color: var(--dark);">
+        Tất cả đánh giá từ cộng đồng ({{ reviews|length }})
+    </h3>
+
+    {% if reviews %}
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            {% for r in reviews %}
+                <div class="card" style="padding: 20px; margin-bottom: 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="{{ r.author.gravatar_url(32) }}" width="32" height="32" class="avatar" alt="Avatar">
+                            <div>
+                                <a href="{{ url_for('profile', username=r.author.username) }}" style="color: var(--dark); text-decoration: none; font-weight: 700; font-size: 14px;">
+                                    {{ r.author.username }}
+                                </a>
+                                <span class="role-pill" style="font-size: 10px; margin-left: 4px;">{{ r.author.role.name }}</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 12px; color: var(--gray-500);">
+                            {{ r.created_at.strftime('%d/%m/%Y %H:%M') }}
+                        </div>
+                    </div>
+                    <div class="markdown-body" style="font-size: 14px; color: #334155;">
+                        {{ r.body_html | safe }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card" style="text-align: center; color: var(--gray-500); padding: 35px;">
+            Chưa có đánh giá nào cho sản phẩm này. Hãy chia sẻ cảm nhận đầu tiên của bạn!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
