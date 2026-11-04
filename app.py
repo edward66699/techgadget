@@ -182,8 +182,6 @@ def init_db():
             db.session.commit()
 
 @app.route("/")
-@app.route("/api/index")
-@app.route("/api/index.py")
 def home():
     show_param = request.args.get("show")
     if show_param in ("followed", "all"):
